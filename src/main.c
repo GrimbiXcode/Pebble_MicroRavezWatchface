@@ -24,6 +24,14 @@ static TextLayer *s_time_layer;
 static TextLayer *s_battery_layer;
 static GBitmap *s_background_bitmap;
 static BitmapLayer *s_background_bitmap_layer;
+// batteryBar Layer
+static Layer *s_batteryBarLayer;
+static uint8_t s_batteryLevel;
+static GPath *s_path;
+static GPathInfo PATH_INFO = {
+  .num_points = 10,
+  .points = (GPoint[]) { {0, 12}, {7, 12}, {17, 4}, {134, 4}, {124, 12}, {144, 12}, {144, 0}, {15, 0}, {0, 0} }
+};
 
 /********************************************************************
 * Routines
@@ -55,6 +63,22 @@ static void update_time() {
 }
 
 /*===================================================================
+* batteryBar handler
+===================================================================*/
+static void layer_update_proc(Layer *layer, GContext *ctx) {
+  // Set the color using RGB values for Green
+  graphics_context_set_fill_color(ctx, GColorFromRGB(19,168,73));
+  
+  graphics_fill_rect(ctx, GRect(5, 3, s_batteryLevel, 5), 0, GCornersAll);
+  
+  // Set the color using RGB values for Grey
+  graphics_context_set_fill_color(ctx, GColorFromRGB(110, 110, 110));
+  
+  // Draw the filled shape in above color
+  gpath_draw_filled(ctx, s_path);
+}
+
+/*===================================================================
 * battery level handler
 ===================================================================*/
 static void battery_handler(BatteryChargeState charge_state) {
@@ -66,8 +90,14 @@ static void battery_handler(BatteryChargeState charge_state) {
     snprintf(battery_text, sizeof(battery_text), "%d%% charged", charge_state.charge_percent);
   }
   text_layer_set_text(s_battery_layer, battery_text);
+  
+  // Save Battery Level
+  s_batteryLevel = (charge_state.charge_percent/10)*13; // max 130
+  
+  // Call draw-update handler
+  layer_set_update_proc(s_batteryBarLayer, layer_update_proc);
+  
 }
-
 /*===================================================================
 * time-tick handler
 ===================================================================*/
@@ -88,6 +118,9 @@ static void main_window_load(Window *window){
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds =layer_get_bounds(window_layer);
   
+  //initialyze batteryLevel
+  s_batteryLevel = 50;
+  
   s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_ONE);
   s_background_bitmap_layer = bitmap_layer_create(bounds);
   
@@ -99,7 +132,7 @@ static void main_window_load(Window *window){
   #endif 
   
   // Create time TextLayer
-  s_time_layer = text_layer_create(GRect(0, 130, 144, 30));
+  s_time_layer = text_layer_create(GRect(0, 130, bounds.size.w, 30));
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorFromRGB(19,168,73));
   text_layer_set_text(s_time_layer, "00:00");
@@ -117,11 +150,17 @@ static void main_window_load(Window *window){
   // Improve the layout to be more like a battery state
   text_layer_set_font(s_battery_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18));
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
+  
+  // Create BatteryBarLayer
+  s_path = gpath_create(&PATH_INFO);
+  s_batteryBarLayer = layer_create(bounds);
+  layer_set_update_proc(s_batteryBarLayer, layer_update_proc);
 
   // Add Layers as a child layer to the Window's root layer
   layer_add_child(window_layer, bitmap_layer_get_layer(s_background_bitmap_layer));
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
   layer_add_child(window_layer, text_layer_get_layer(s_battery_layer));
+  layer_add_child(window_layer, s_batteryBarLayer);
   
   // Make sure the time is displayed from the start
   update_time();
@@ -140,6 +179,9 @@ static void main_window_unload(Window *window){
   // Destroy TextLayer
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_battery_layer);
+  // Destroy BatteryBarlayer
+  layer_destroy(s_batteryBarLayer);
+  gpath_destroy(s_path);
 }
 
 /*===================================================================
