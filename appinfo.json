@@ -1,0 +1,34 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "GrimbiXcode",
+    "longName": "MicroRavez WatchFace",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/MicroravezWatchfaceMini.png",
+                "menuIcon": true,
+                "name": "FACE_IMAGE",
+                "type": "png"
+            },
+            {
+                "file": "images/converted.png",
+                "name": "IMAGE_ONE",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "MicroRavez WatchFace",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "0e6deddd-189f-4a8b-ac8e-c9824ac26c81",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
