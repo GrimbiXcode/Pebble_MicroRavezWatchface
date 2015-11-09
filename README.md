@@ -12,11 +12,17 @@ Coded and compiled on the new Pebble SDK 3.0 for the system:
 * `Basalt (Pebble Time or Pebble Time Steel)`
 
 ##History
+###Version 1.2
+* Add date (day and month)
+* New FONT!
+
+  ![Watchface](Screenshots/LogoV1.2.png)
+
 ###Version 1.1
 
 * Add battery state
 
-  ![Watchface](Screenshots/Logo.png)
+  ![Watchface](Screenshots/LogoV1.1.png)
 
 ###Version 1.0
 
