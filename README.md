@@ -17,6 +17,7 @@ Coded and compiled on the new Pebble SDK 3.0 for the system:
 * New FONT!
 
   ![Watchface](Screenshots/LogoV1.2.png)
+  ![Watchface](Screenshots/LogoV1.2b.png)
 
 ###Version 1.1
 
