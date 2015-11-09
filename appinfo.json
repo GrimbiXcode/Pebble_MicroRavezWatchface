@@ -1,7 +1,9 @@
 {
-    "appKeys": {},
+    "appKeys": {
+        "BatteryBar": 0
+    },
     "capabilities": [
-        "configurable"
+        ""
     ],
     "companyName": "GrimbiXcode",
     "longName": "MicroRavez WatchFace",
@@ -27,7 +29,7 @@
         "basalt"
     ],
     "uuid": "0e6deddd-189f-4a8b-ac8e-c9824ac26c81",
-    "versionLabel": "1.0",
+    "versionLabel": "1.2",
     "watchapp": {
         "watchface": true
     }
